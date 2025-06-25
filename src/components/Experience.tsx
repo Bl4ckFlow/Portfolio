@@ -1,8 +1,6 @@
 'use client'
 
 import { Calendar, Award } from 'lucide-react'
-import { useState, useEffect } from 'react'
-
 
 export default function Experience() {
 
@@ -29,7 +27,7 @@ export default function Experience() {
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-black">Experience</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              My professional journey and the amazing teams I've worked with.
+              My professional journey and the amazing teams I&apos;ve worked with.
             </p>
           </div>
           

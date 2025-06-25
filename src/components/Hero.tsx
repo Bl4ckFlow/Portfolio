@@ -1,45 +1,35 @@
 'use client'
 
 import { Github, Mail, Download, ChevronDown} from 'lucide-react'
-import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 
 export default function Hero() {
   
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState('home')
-  const [isScrolled, setIsScrolled] = useState(false)
- 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-      setActiveSection(sectionId)
-      setIsMenuOpen(false)
-    }
-  }
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
 
   return (
     <section id="home" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black bg-opacity-20"></div>
         <div className="relative max-w-4xl mx-auto px-6 text-center">
           <div className="mb-8">
-            <img 
-              src="/image.png" 
-              alt="Profile" 
-              className="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-white shadow-2xl"
-            />
+          <Image 
+           src="/image.png" 
+           alt="Profile" 
+           width={128}
+           height={128}
+           className="rounded-full mx-auto mb-6 border-4 border-white shadow-2xl"
+          />
+
           </div>
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            Hi, I'm <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">Raouf</span>
+            Hi, I&apos;m <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">Raouf</span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-blue-100 leading-relaxed">
             Engineering student specializing in Cloud Computing and Cybersecurity

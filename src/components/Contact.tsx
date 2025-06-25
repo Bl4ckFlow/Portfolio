@@ -6,9 +6,9 @@ export default function Hero() {
   return (
     <section id="contact" className="py-20 bg-gradient-to-r from-blue-800 to-purple-400 text-white">
       <div className="max-w-4xl mx-auto px-6 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold mb-6">Let's Work Together</h2>
+        <h2 className="text-4xl md:text-5xl font-bold mb-6">Let&apos;s Work Together</h2>
         <p className="text-xl mb-12 text-blue-100">
-          Have a project in mind? I'd love to hear about it. Let's create something amazing together.
+          Have a project in mind? I&apos;d love to hear about it. Let&apos;s create something amazing together.
         </p>
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">

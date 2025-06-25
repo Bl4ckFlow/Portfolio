@@ -1,7 +1,7 @@
 'use client'
 
 import { 
-  Github, Linkedin, Mail, Heart
+  Github, Mail, Heart
 } from 'lucide-react'
 
 export default function Footer() {

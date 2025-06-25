@@ -17,7 +17,7 @@ export default function About() {
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-black">About Me</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              I'm a passionate developer and cybersecurity enthusiast with 3 years of experience, dedicated to building secure and efficient solutions.
+              I&apos;m a passionate developer and cybersecurity enthusiast with 3 years of experience, dedicated to building secure and efficient solutions.
             </p>
           </div>
           
@@ -26,7 +26,7 @@ export default function About() {
               <h3 className="text-2xl font-bold mb-6 text-gray-700">My Story</h3>
               <p className="text-gray-600 mb-6 leading-relaxed">
                 I began my journey at the Higher School of Artificial Intelligence in Algiers, and later continued my studies at ESILV in France, where I’ll be starting my 4th year in September 2025.
-                I'm currently interning at a law firm, De Pardieu Brocas Maffei, as a developer—building dashboards and fine-tuning LLMs to better handle legal document processing and improve their usability in a juridical context.
+                I&apos;m currently interning at a law firm, De Pardieu Brocas Maffei, as a developer—building dashboards and fine-tuning LLMs to better handle legal document processing and improve their usability in a juridical context.
               </p>
               <p className="text-gray-600 mb-8 leading-relaxed">
                 Outside of coding, I enjoy contributing to open-source projects, upping my skills, practicing MMA, playing video games, watching films, and spending time outdoors—especially hiking.
