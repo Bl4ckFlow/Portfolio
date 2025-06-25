@@ -1,20 +1,8 @@
 'use client'
 
 import { Github, ExternalLink} from 'lucide-react'
-import { useState, useEffect } from 'react'
-
 
 export default function Project() {
-
-  const [isScrolled, setIsScrolled] = useState(false)
- 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   const projects = [
     {
