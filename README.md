@@ -26,8 +26,12 @@ At the top of the same file, `CONFIG` controls the look and behaviour:
 
 ### Things to replace before deploying
 
-- **`FINDINGS`** ships with four *placeholder* disclosures that came with the design. Swap in
-  your own reports, or set the array to `[]` to hide the whole `/findings` section.
+- **`FINDINGS`** lives in `src/data/findings.ts`. Only reports triage confirmed as a real bug are
+  listed — accepted, resolved, or duplicate. Reports still in triage and ones closed as
+  informative / invalid / out of scope are left out, which also keeps the file safe to publish:
+  nothing in it is an open report against an unpatched target. Program names, assets, hostnames
+  and endpoints must never be added; programs are opaque ids (`p01`, `p02` …). Set the array to
+  `[]` to hide the whole `/findings` section.
 - **`SKILLS`** levels are self-assessed numbers from 0 to 1, rendered as a byte (`0x00`–`0xFF`).
 - **`CONTACT.links`** has a commented-out LinkedIn row — uncomment it and add your handle.
 - **`CONTACT.pgp`** is `null`, which hides the PGP block. Fill it in to show a fingerprint,

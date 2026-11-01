@@ -15,9 +15,7 @@ import { LEAD_STYLE, SECTION_STYLE, SectionHeading } from './ui'
 
 const STATUS_COLOR: Record<string, string> = {
   validated: 'var(--color-accent)',
-  pending: 'var(--color-accent-2)',
   duplicate: 'var(--color-neutral-400)',
-  closed: 'var(--color-neutral-500)',
 }
 
 function Filter({
@@ -152,7 +150,7 @@ function Row({ f }: { f: Finding }) {
       </span>
 
       <span className="ledger-status" style={{ color: STATUS_COLOR[g] }}>
-        {g === 'validated' ? '✓' : g === 'pending' ? '◆' : '·'} {meta.label}
+        {g === 'validated' ? '✓' : '·'} {meta.label}
       </span>
 
       <span className="ledger-plat" style={{ color: 'var(--color-neutral-500)' }}>
@@ -172,9 +170,9 @@ export default function Findings() {
     return ['all', ...(Object.keys(CLASS_LABEL) as FindingClass[]).filter((c) => seen.has(c))]
   }, [])
 
-  // default view is the live work; the button folds duplicates and closed reports back in
+  // default view is the accepted work; the button folds the duplicates back in
   const pool = useMemo(
-    () => (showAll ? FINDINGS : FINDINGS.filter((f) => ['validated', 'pending'].includes(group(f)))),
+    () => (showAll ? FINDINGS : FINDINGS.filter((f) => group(f) === 'validated')),
     [showAll],
   )
 
@@ -194,7 +192,7 @@ export default function Findings() {
         a.id.localeCompare(b.id),
     )
 
-  const hidden = LEDGER_STATS.duplicate + LEDGER_STATS.closed
+  const hidden = LEDGER_STATS.duplicate
   const query = `$ query --severity=${sev} --class=${cls.toLowerCase()}${showAll ? ' --all' : ''}`
   const s = LEDGER_STATS
 
@@ -204,13 +202,12 @@ export default function Findings() {
     <section id="findings" aria-labelledby="h-findings" style={SECTION_STYLE}>
       <SectionHeading hex="0x02" id="h-findings" name="findings" cmd="$ query --redacted --sort=severity" />
       <p style={LEAD_STYLE}>
-        Every report I’ve filed on SignalFisher and YesWeHack, against public-sector, banking,
-        health and platform programs. Program names, assets and endpoints stay redacted — several of
-        these are still open, so their targets aren’t patched yet. What’s left is the shape of the
-        work.
+        Bugs confirmed by triage on SignalFisher and YesWeHack, against public-sector, banking,
+        health and platform programs. Program names, assets and endpoints stay redacted — what’s
+        left is the shape of the work.
       </p>
 
-      {/* aggregate ledger — the full picture, including what never landed */}
+      {/* aggregate ledger */}
       <dl
         style={{
           display: 'grid',
@@ -226,12 +223,12 @@ export default function Findings() {
       >
         {(
           [
-            ['reports filed', String(s.total), 'var(--color-text)'],
+            ['confirmed bugs', String(s.total), 'var(--color-text)'],
             ['programs', String(s.programs), 'var(--color-text)'],
             ['critical', String(s.critical), 'var(--color-accent-2)'],
             ['high', String(s.high), 'var(--color-accent-2-300)'],
             ['accepted / resolved', String(s.validated), 'var(--color-accent)'],
-            ['still open', String(s.pending), 'var(--color-accent-2)'],
+            ['duplicates', String(s.duplicate), 'var(--color-neutral-300)'],
           ] as [string, string, string][]
         ).map(([k, v, c]) => (
           <div
@@ -310,12 +307,12 @@ export default function Findings() {
             <span aria-hidden="true" style={{ color: 'var(--color-neutral-500)' }}>
               {showAll ? '[−]' : '[+]'}
             </span>
-            {showAll ? 'hide duplicates & closed' : `show duplicates & closed (${hidden})`}
+            {showAll ? 'hide duplicates' : `show duplicates (${hidden})`}
           </button>
           <span style={{ fontSize: 12, color: 'var(--color-neutral-500)' }}>
             {showAll
-              ? `${s.duplicate} duplicates — real bugs someone reported first`
-              : 'collapsed to accepted, resolved and in-triage reports'}
+              ? `${s.duplicate} duplicates — real bugs, someone just filed them first`
+              : 'collapsed to accepted and resolved reports'}
           </span>
         </div>
 

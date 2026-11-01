@@ -198,15 +198,15 @@ export function SiteProvider({ children }: { children: ReactNode }) {
           link,
         ]
       case 'findings': {
-        const top = FINDINGS.filter((f) => group(f) === 'validated' || group(f) === 'pending')
+        const top = FINDINGS.filter((f) => group(f) === 'validated')
           .sort((a, b) => SEV[a.sev].rank - SEV[b.sev].rank || b.date.localeCompare(a.date))
           .slice(0, 10)
         return [
           { k: 'head', t: 'disclosure ledger — targets redacted' },
-          kv('reports', String(LEDGER_STATS.total) + ' across ' + LEDGER_STATS.programs + ' programs'),
+          kv('confirmed', String(LEDGER_STATS.total) + ' across ' + LEDGER_STATS.programs + ' programs'),
           kv('platforms', 'SignalFisher · YesWeHack'),
           kv('severity', LEDGER_STATS.critical + ' critical · ' + LEDGER_STATS.high + ' high'),
-          kv('outcome', LEDGER_STATS.validated + ' accepted/resolved · ' + LEDGER_STATS.pending + ' open · ' + LEDGER_STATS.duplicate + ' duplicate'),
+          kv('outcome', LEDGER_STATS.validated + ' accepted/resolved · ' + LEDGER_STATS.duplicate + ' duplicate'),
           { k: 'dim', t: '' },
           { k: 'dim', t: 'ID'.padEnd(13) + 'SEV'.padEnd(6) + 'CLASS'.padEnd(10) + 'STATUS' },
           ...top.map((f) => ({
