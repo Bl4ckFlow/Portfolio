@@ -139,7 +139,7 @@ export default function Hero() {
                 whiteSpace: 'nowrap',
               }}
             >
-              raf, offensive security researcher
+              {PROFILE.srName}
             </span>
             <span aria-hidden="true">
               {TITLE.map(([text, style], i) => {
@@ -165,10 +165,11 @@ export default function Hero() {
             textWrap: 'pretty',
           }}
         >
-          Raouf “Raf” Laarbi —{' '}
-          <span style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>Om4ga_</span>{' '}
-          on the leaderboards. Final-year cybersecurity engineering student at ESILV Paris, bug bounty
-          hunter, and researcher in intrusion detection for industrial control systems.
+          {PROFILE.tagline.before}
+          <span style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
+            {PROFILE.tagline.handle}
+          </span>
+          {PROFILE.tagline.after}
         </p>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}>

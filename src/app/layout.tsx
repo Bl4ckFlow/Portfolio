@@ -21,7 +21,7 @@ const plexSans = IBM_Plex_Sans({
 export const metadata: Metadata = {
   title: 'raf // offensive security researcher',
   description:
-    'Raouf “Raf” Laarbi (Om4ga_) — offensive security researcher, bug bounty hunter and ICS/OT intrusion-detection researcher based in Paris.',
+    'Abderraouf “Raf” LAARBI (Om4ga_) — offensive security researcher, bug bounty hunter and ICS/OT intrusion-detection researcher based in Paris.',
 }
 
 export const viewport: Viewport = {

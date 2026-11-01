@@ -1,6 +1,6 @@
 # raf // offensive security researcher
 
-Portfolio for Raouf “Raf” Laarbi (`Om4ga_`) — a terminal-styled single page built with
+Portfolio for Abderraouf “Raf” LAARBI (`Om4ga_`) — a terminal-styled single page built with
 Next.js 15 (App Router), React 19 and plain CSS custom properties.
 
 ```bash

@@ -190,7 +190,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
     switch (id) {
       case 'about':
         return [
-          { k: 'head', t: 'Raouf "Raf" Laarbi — offensive security researcher, Paris' },
+          { k: 'head', t: 'Abderraouf "Raf" LAARBI — offensive security researcher, Paris' },
           kv('edu', 'ESILV Paris — final year, Cloud Computing & Cybersecurity'),
           kv('bounty', 'YesWeHack #1097 · SignalFisher #63'),
           kv('research', 'ICS/OT intrusion detection — Univ. of Tartu'),

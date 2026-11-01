@@ -29,19 +29,28 @@ export const CONFIG = {
 /* ─── identity ─────────────────────────────────────────────────────────── */
 
 export const PROFILE = {
-  name: 'Raouf Laarbi',
+  name: 'Abderraouf LAARBI',
   handle: 'om4ga_',
   github: 'Bl4ckFlow',
   role: 'offensive security researcher',
   location: 'paris, fr',
   available: 'available 09.2027',
   ranks: ['yeswehack #1097', 'signalfisher #63'],
-  tagline:
-    'Raouf “Raf” Laarbi — Om4ga_ on the leaderboards. Final-year cybersecurity engineering student at ESILV Paris, bug bounty hunter, and researcher in intrusion detection for industrial control systems.',
-  lede: 'I break web applications — with permission — and study how to catch the people who don’t ask.',
+  // rendered in the hero; `handle` gets the mono treatment between the two halves
+  tagline: {
+    before: 'Abderraouf “Raf” LAARBI — ',
+    handle: 'Om4ga_',
+    after:
+      ' on the leaderboards. Final-year cybersecurity engineering student at ESILV Paris, bug bounty hunter, and researcher in intrusion detection for industrial control systems.',
+  },
+  /** what a screen reader and the <h1> fallback announce */
+  srName: 'Abderraouf “Raf” LAARBI, offensive security researcher',
+  lede: 'Bug bounty hunter and passionate cybersecurity researcher.',
   about: [
-    'I’m a final-year engineering student at ESILV Paris, majoring in Cloud Computing & Cybersecurity. On YesWeHack and SignalFisher I go after broken access control, IDORs and business-logic flaws — the bugs scanners walk straight past.',
-    'With the InfoSec group at the University of Tartu I research intrusion detection for industrial control systems: catching attacks on PLCs and sensors that stay inside normal process tolerances — a first stint in June 2026, and back there from February to June 2027. From September 2027 I’m looking for a CIFRE PhD or a research-driven offensive security role.',
+    'I’m a final-year cybersecurity and cloud computing engineering student at ESILV Paris, with a particular interest in offensive security, vulnerability research, and intrusion detection.',
+    'I actively participate in bug bounty programs on YesWeHack and SignalFisher, focusing on web application vulnerabilities.',
+    'At the University of Tartu, I’ve also worked with the Information Security research group on intrusion detection for industrial control systems, studying attacks that remain within normal operational thresholds.',
+    'I’m interested in pursuing a CIFRE PhD or joining a research-driven offensive security team starting September 2027.',
   ],
 }
 
