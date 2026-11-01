@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# raf // offensive security researcher
 
-## Getting Started
-
-First, run the development server:
+Portfolio for Raouf “Raf” Laarbi (`Om4ga_`) — a terminal-styled single page built with
+Next.js 15 (App Router), React 19 and plain CSS custom properties.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Editing content
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**All copy and data lives in [`src/data/portfolio.ts`](src/data/portfolio.ts).** Edit that file,
+not the components. It holds the profile and contact details, the findings, research dossiers,
+projects, skill levels, timeline, boot log, and the CV list.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+At the top of the same file, `CONFIG` controls the look and behaviour:
 
-## Learn More
+| key | values | what it does |
+| --- | --- | --- |
+| `accent` | `'acid green'` · `'cyan'` | accent ramp for the whole page |
+| `crtEffects` | `true` · `false` | scanlines, vignette and film grain |
+| `bootSequence` | `'always'` · `'once per session'` · `'off'` | the BIOS-style intro |
+| `availableFrom` | `{ year, month, day }` | target of the availability countdown |
 
-To learn more about Next.js, take a look at the following resources:
+### Things to replace before deploying
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **`FINDINGS`** ships with four *placeholder* disclosures that came with the design. Swap in
+  your own reports, or set the array to `[]` to hide the whole `/findings` section.
+- **`SKILLS`** levels are self-assessed numbers from 0 to 1, rendered as a byte (`0x00`–`0xFF`).
+- **`CONTACT.links`** has a commented-out LinkedIn row — uncomment it and add your handle.
+- **`CONTACT.pgp`** is `null`, which hides the PGP block. Fill it in to show a fingerprint,
+  a public key and an `.asc` download.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### The CVs
 
-## Deploy on Vercel
+Both PDFs live in `public/cv/` and are listed in `CVS`. They are offered in four places:
+the hero (`cv --en` / `cv --fr`), the `/contact` panel, the footer, and the shell command
+`cv`, `cv en` or `cv fr`. To update one, drop a new PDF at the same path — or change the
+path and filename in `CVS`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Layout
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+  app/            layout, globals.css (design tokens + .btn/.tag/.seg classes), icon.svg
+  data/           portfolio.ts — every piece of content
+  lib/format.ts   severity styles, hex levels, redaction-bar parsing
+  components/
+    site-context.tsx   terminal shell, keyboard nav, toasts, scroll spy
+    TerminalPane.tsx   the log + prompt, used by the hero and the docked terminal
+    ui.tsx             shared atoms: section headings, decrypt text, pulse dot, hooks
+    Navbar · Hero · About · Findings · Research · Project · Skills · Timeline · Contact · Footer
+    Overlays.tsx       CRT layer, boot screen, docked terminal, toast, alarm, FAB
+```
+
+## Keyboard
+
+`1`–`7` jump to a section · `0` back to top · `/` or `` ` `` opens the terminal · `esc` closes it.
+In the terminal: `tab` completes, `↑`/`↓` walks history, `ctrl+l` clears. `help` lists commands.
+There is a Konami code.

@@ -1,69 +1,137 @@
 'use client'
 
-export default function About() {
+import { useEffect, useState } from 'react'
+import { CONFIG, PROFILE, SYS_STATUS } from '../data/portfolio'
+import { LeaderRow, PulseDot, SECTION_STYLE, SectionHeading } from './ui'
 
-  const skills = [
-    { name: 'C/C++', level: 60, color: 'bg-purple-500' },
-    { name: 'Web Development', level: 80, color: 'bg-blue-500' },
-    { name: 'Python & Machine Learning', level: 55, color: 'bg-red-600' },
-    { name: 'Linux & Linux Internals', level: 35, color: 'bg-green-500' },
-    { name: 'Networking', level: 30, color: 'bg-yellow-500' },
-    { name: 'SQL', level: 75, color: 'bg-green-600' }
-  ]
+function useCountdown() {
+  const [label, setLabel] = useState('uplink nominal')
+  useEffect(() => {
+    const { year, month, day } = CONFIG.availableFrom
+    const days = Math.ceil((Date.UTC(year, month, day) - Date.now()) / 864e5)
+    setLabel(days > 0 ? `t–${days}d to availability` : 'available now')
+  }, [])
+  return label
+}
+
+export default function About() {
+  const tMinus = useCountdown()
 
   return (
-    <section id="about" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-black">About Me</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              I&apos;m a passionate developer and cybersecurity enthusiast with 3 years of experience, dedicated to building secure and efficient solutions.
+    <section id="about" aria-labelledby="h-about" style={SECTION_STYLE}>
+      <SectionHeading hex="0x01" id="h-about" name="about" cmd="$ whoami --verbose" />
+
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'flex-start',
+          gap: 'clamp(32px, 5vw, 72px)',
+          marginTop: 'clamp(28px, 4vw, 44px)',
+        }}
+      >
+        <div
+          style={{
+            flex: '1.3 1 480px',
+            minWidth: 0,
+            maxWidth: '64ch',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 18,
+          }}
+        >
+          <p
+            style={{
+              margin: 0,
+              font: '400 clamp(20px, 2vw, 25px)/1.45 var(--font-body)',
+              letterSpacing: '-0.01em',
+              color: 'var(--color-text)',
+              textWrap: 'pretty',
+            }}
+          >
+            {PROFILE.lede}
+          </p>
+          {PROFILE.about.map((p) => (
+            <p
+              key={p.slice(0, 24)}
+              style={{
+                margin: 0,
+                font: '400 16.5px/1.7 var(--font-body)',
+                color: 'var(--color-neutral-300)',
+                textWrap: 'pretty',
+              }}
+            >
+              {p}
             </p>
+          ))}
+        </div>
+
+        <div
+          className="bracketed bracketed-sm"
+          style={{
+            flex: '1 1 360px',
+            minWidth: 0,
+            border: '1px solid var(--color-neutral-700)',
+            borderRadius: 'var(--radius-lg)',
+            background: 'color-mix(in srgb, var(--color-surface) 86%, transparent)',
+            fontFamily: 'var(--font-heading)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              padding: '11px 16px',
+              borderBottom: '1px solid var(--color-divider)',
+              font: '500 11px/1 var(--font-heading)',
+              letterSpacing: '.12em',
+              textTransform: 'uppercase',
+              color: 'var(--color-neutral-400)',
+            }}
+          >
+            <span>sys.status</span>
+            <span
+              style={{
+                marginLeft: 'auto',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 7,
+                color: 'var(--color-accent)',
+              }}
+            >
+              <PulseDot />
+              all systems nominal
+            </span>
           </div>
-          
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h3 className="text-2xl font-bold mb-6 text-gray-700">My Story</h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                I began my journey at the Higher School of Artificial Intelligence in Algiers, and later continued my studies at ESILV in France, where I’ll be starting my 4th year in September 2025.
-                I&apos;m currently interning at a law firm, De Pardieu Brocas Maffei, as a developer—building dashboards and fine-tuning LLMs to better handle legal document processing and improve their usability in a juridical context.
-              </p>
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                Outside of coding, I enjoy contributing to open-source projects, upping my skills, practicing MMA, playing video games, watching films, and spending time outdoors—especially hiking.
-              </p>
-              <div className="grid grid-cols-2 gap-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600 mb-2">7+</div>
-                  <div className="text-gray-600">Projects Completed</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-green-600 mb-2">2+</div>
-                  <div className="text-gray-600">Happy Clients</div>
-                </div>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-2xl font-bold mb-8 text-black">Skills & Technologies</h3>
-              <div className="space-y-6">
-                {skills.map((skill, index) => (
-                  <div key={index}>
-                    <div className="flex justify-between mb-2">
-                      <span className="font-medium text-black">{skill.name}</span>
-                      <span className="text-gray-600">{skill.level}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div 
-                        className={`h-3 rounded-full ${skill.color} transition-all duration-1000 ease-out`}
-                        style={{ width: `${skill.level}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+
+          <dl style={{ margin: 0, padding: '6px 16px 10px', font: '400 13px/1.4 var(--font-heading)' }}>
+            {SYS_STATUS.map(([k, v, tone]) => (
+              <LeaderRow key={k} term={k}>
+                <span style={tone === 'accent' ? { color: 'var(--color-accent)' } : undefined}>{v}</span>
+              </LeaderRow>
+            ))}
+          </dl>
+
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+              gap: '6px 12px',
+              padding: '10px 16px',
+              borderTop: '1px solid var(--color-divider)',
+              font: '400 11px/1.3 var(--font-heading)',
+              letterSpacing: '.06em',
+              textTransform: 'uppercase',
+              color: 'var(--color-neutral-500)',
+            }}
+          >
+            <span>uplink paris-fr · cet</span>
+            <span style={{ color: 'var(--color-accent-2)' }}>{tMinus}</span>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
   )
 }
