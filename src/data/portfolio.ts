@@ -41,7 +41,7 @@ export const PROFILE = {
   lede: 'I break web applications — with permission — and study how to catch the people who don’t ask.',
   about: [
     'I’m a final-year engineering student at ESILV Paris, majoring in Cloud Computing & Cybersecurity. On YesWeHack and SignalFisher I go after broken access control, IDORs and business-logic flaws — the bugs scanners walk straight past.',
-    'With the InfoSec group at the University of Tartu, I research intrusion detection for industrial control systems: catching attacks on PLCs and sensors that stay inside normal process tolerances. From September 2027 I’m looking for a CIFRE PhD or a research-driven offensive security role.',
+    'With the InfoSec group at the University of Tartu I research intrusion detection for industrial control systems: catching attacks on PLCs and sensors that stay inside normal process tolerances — a first stint in June 2026, and back there from February to June 2027. From September 2027 I’m looking for a CIFRE PhD or a research-driven offensive security role.',
   ],
 }
 
@@ -92,181 +92,11 @@ export const SYS_STATUS: [string, string, 'text' | 'accent'][] = [
   ['available', 'sept 2027 · CIFRE PhD', 'accent'],
 ]
 
-/* ─── findings ─────────────────────────────────────────────────────────── */
+/* ─── findings ───────────────────────────────────────────────────────── */
 
-export type Severity = 'critical' | 'high' | 'medium' | 'low'
-
-export type Finding = {
-  id: string
-  date: string
-  sev: Severity
-  cvss: string
-  cls: string
-  cwe: string
-  title: string
-  impact: string
-  platform: string
-  status: string
-  trail: string[]
-  summary: string
-  impacts: string[]
-  poc: string[]
-  /** `[[n]]` renders an n-character redaction bar */
-  code: string[]
-  fix: string
-}
-
-// ⚠ PLACEHOLDER DISCLOSURES — these four write-ups ship with the design, not
-// with your bounty history. Replace every field with your own reports (or
-// empty the array to hide the section) before this goes live.
-export const FINDINGS: Finding[] = [
-  {
-    id: 'RAF-2025-004',
-    date: '2025-02',
-    sev: 'critical',
-    cvss: '9.1',
-    cls: 'BAC',
-    cwe: 'CWE-915',
-    title: 'Org-admin takeover via mass assignment',
-    impact:
-      'Any authenticated user could promote themselves to organization admin by smuggling a role field into a profile update.',
-    platform: 'YesWeHack',
-    status: 'resolved',
-    trail: ['reported 2025-02-11', 'triaged 02-12', 'fixed 02-27'],
-    summary:
-      'The profile endpoint bound the entire JSON body onto the user model. A role attribute the UI never exposes was accepted and persisted without any authorization check.',
-    impacts: [
-      'Full admin control over any organization the attacker belongs to',
-      'Access to billing, SSO configuration and every member’s personal data',
-      'Exploitable from a free-tier account in a single request',
-    ],
-    poc: [
-      'Create a free account and join any organization.',
-      'Intercept the profile update and append "role": "owner" to the JSON body.',
-      'Reload the dashboard — the admin console is now unlocked.',
-    ],
-    code: [
-      'PATCH /api/v1/users/me HTTP/2',
-      'Host: app.[[9]].io',
-      'Content-Type: application/json',
-      '',
-      '{"display_name":"raf","role":"owner"}',
-      '',
-      'HTTP/2 200 OK',
-      '{"id":"usr_[[6]]","role":"owner"}',
-    ],
-    fix: 'Bind requests to explicit DTOs with an allow-list of writable fields, and move role changes to a dedicated, authorization-checked endpoint.',
-  },
-  {
-    id: 'RAF-2024-011',
-    date: '2024-11',
-    sev: 'high',
-    cvss: '7.5',
-    cls: 'IDOR',
-    cwe: 'CWE-639',
-    title: 'Cross-account invoice disclosure',
-    impact:
-      'Sequential document IDs let any customer download every other customer’s invoices — names, postal addresses and partial IBANs.',
-    platform: 'YesWeHack',
-    status: 'resolved',
-    trail: ['reported 2024-11-03', 'triaged 11-04', 'fixed 11-19'],
-    summary:
-      'Invoice PDFs were served by numeric ID. The endpoint checked that a session existed, but never that the invoice belonged to the account asking for it.',
-    impacts: [
-      'Personal and banking data of the whole customer base exposed',
-      'No rate limiting — full enumeration in minutes',
-      'Reportable personal-data breach under GDPR',
-    ],
-    poc: [
-      'Download one of your own invoices and note its ID.',
-      'Decrement the ID and replay the request with your own session.',
-      'Receive another customer’s invoice — verified between two test accounts only.',
-    ],
-    code: [
-      'GET /api/v2/invoices/48213/pdf HTTP/2',
-      'Host: billing.[[8]].com',
-      'Cookie: session=[[16]]',
-      '',
-      'HTTP/2 200 OK',
-      'Content-Type: application/pdf',
-      '# invoice 48213 belongs to another customer',
-    ],
-    fix: 'Scope every lookup to the authenticated account server-side, and replace sequential IDs with non-guessable identifiers.',
-  },
-  {
-    id: 'RAF-2025-007',
-    date: '2025-06',
-    sev: 'high',
-    cvss: '7.7',
-    cls: 'SSRF',
-    cwe: 'CWE-918',
-    title: 'SSRF through the PDF report exporter',
-    impact:
-      'The exporter fetched attacker-controlled URLs server-side, exposing internal admin services on the private network.',
-    platform: 'SignalFisher',
-    status: 'accepted',
-    trail: ['reported 2025-06-02', 'triaged 06-05', 'accepted 06-09'],
-    summary:
-      'The HTML-to-PDF renderer followed iframe and image sources inside user-supplied report templates, from a host with direct access to the internal network.',
-    impacts: [
-      'Read access to an internal admin dashboard',
-      'Internal port scanning through response timing',
-      'Cloud metadata protected by IMDSv2 — blast radius contained',
-    ],
-    poc: [
-      'Create a report template that embeds an iframe pointing at an internal host.',
-      'Export the report to PDF.',
-      'The rendered PDF contains the internal admin page.',
-    ],
-    code: [
-      'POST /api/reports/export HTTP/2',
-      'Host: [[10]].net',
-      'Content-Type: application/json',
-      '',
-      '{"template":"<iframe src=\'http://10.0.12.7:8080/admin\'>"}',
-      '',
-      'HTTP/2 200 OK',
-      '# the PDF renders the internal admin panel',
-    ],
-    fix: 'Render in a sandbox with egress allow-listing, and block private, loopback and link-local ranges after DNS resolution.',
-  },
-  {
-    id: 'RAF-2025-009',
-    date: '2025-09',
-    sev: 'medium',
-    cvss: '5.4',
-    cls: 'XSS',
-    cwe: 'CWE-79',
-    title: 'Stored XSS in support-ticket attachments',
-    impact:
-      'A crafted attachment filename executed JavaScript in the support agent’s dashboard the moment the ticket was opened.',
-    platform: 'SignalFisher',
-    status: 'accepted',
-    trail: ['reported 2025-09-14', 'triaged 09-16', 'accepted 09-18'],
-    summary:
-      'Filenames were encoded in the customer view but rendered as raw HTML in the agent console’s attachment list.',
-    impacts: [
-      'Script execution inside an authenticated agent session',
-      'Ticket contents and internal notes readable',
-      'HttpOnly cookies limited full session theft',
-    ],
-    poc: [
-      'Open a support ticket.',
-      'Attach a file whose name carries an HTML payload.',
-      'When an agent opens the ticket, the payload fires.',
-    ],
-    code: [
-      'POST /api/tickets/[[6]]/attachments HTTP/2',
-      'Host: support.[[8]].com',
-      '',
-      'Content-Disposition: form-data; name="file";',
-      '  filename="<img src=x onerror=alert(document.domain)>.png"',
-      '',
-      '# fires in the agent console on ticket open',
-    ],
-    fix: 'Encode output for every rendering context, and ship a strict Content-Security-Policy on the agent console.',
-  },
-]
+// The disclosure ledger lives in its own file — see src/data/findings.ts
+export { FINDINGS, LEDGER_STATS, CLASS_LABEL, STATUS_META, group } from './findings'
+export type { Finding, FindingClass, FindingStatus, Severity, StatusGroup } from './findings'
 
 /* ─── research ─────────────────────────────────────────────────────────── */
 
@@ -295,7 +125,7 @@ export const DOSSIERS: Dossier[] = [
       ['affiliation', 'University of Tartu — InfoSec group'],
       ['venue', 'NordSec 2026 · submitted'],
       ['dataset', 'HAI — HIL-based augmented ICS'],
-      ['period', '2025 → present'],
+      ['period', 'jun 2026 · resuming feb–jun 2027'],
     ],
     abstract:
       'We benchmark learning-based detectors on HAI, a hardware-in-the-loop testbed spanning boiler, turbine and water-treatment processes, with a focus on stealthy attacks that keep sensor readings inside normal operating bounds — the ones threshold alarms never see.',
@@ -531,9 +361,9 @@ export const TIMELINE: Commit[] = [
       { t: 'HEAD -> main', kind: 'branch' },
       { t: 'tag: nordsec-26', kind: 'tag' },
     ],
-    when: '2025 → present',
+    when: 'jun 2026 · feb–jun 2027',
     subject: 'feat(research): University of Tartu — InfoSec group',
-    body: 'ICS/OT intrusion detection on the HAI dataset. Paper submitted to NordSec 2026, now under revision for resubmission.',
+    body: 'ICS/OT intrusion detection on the HAI dataset. First stint June 2026; back with the group February to June 2027. Paper submitted to NordSec 2026, now under revision for resubmission.',
     dot: 'head',
   },
   {

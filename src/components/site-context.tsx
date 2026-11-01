@@ -16,12 +16,12 @@ import {
   CONFIG,
   CONTACT,
   CVS,
-  FINDINGS,
   SECTIONS,
   SKILLS,
   TIMELINE,
   type SectionId,
 } from '../data/portfolio'
+import { CLASS_LABEL, FINDINGS, LEDGER_STATS, STATUS_META, group } from '../data/findings'
 import { SEV, avg, hx } from '../lib/format'
 
 const KONAMI = 'arrowup,arrowup,arrowdown,arrowdown,arrowleft,arrowright,arrowleft,arrowright,b,a'
@@ -197,16 +197,31 @@ export function SiteProvider({ children }: { children: ReactNode }) {
           kv('available', 'September 2027 — CIFRE PhD / research roles'),
           link,
         ]
-      case 'findings':
+      case 'findings': {
+        const top = FINDINGS.filter((f) => group(f) === 'validated' || group(f) === 'pending')
+          .sort((a, b) => SEV[a.sev].rank - SEV[b.sev].rank || b.date.localeCompare(a.date))
+          .slice(0, 10)
         return [
-          { k: 'dim', t: 'ID'.padEnd(14) + 'SEV'.padEnd(6) + 'CLASS'.padEnd(7) + 'TITLE' },
-          ...FINDINGS.map((f) => ({
+          { k: 'head', t: 'disclosure ledger — targets redacted' },
+          kv('reports', String(LEDGER_STATS.total) + ' across ' + LEDGER_STATS.programs + ' programs'),
+          kv('platforms', 'SignalFisher · YesWeHack'),
+          kv('severity', LEDGER_STATS.critical + ' critical · ' + LEDGER_STATS.high + ' high'),
+          kv('outcome', LEDGER_STATS.validated + ' accepted/resolved · ' + LEDGER_STATS.pending + ' open · ' + LEDGER_STATS.duplicate + ' duplicate'),
+          { k: 'dim', t: '' },
+          { k: 'dim', t: 'ID'.padEnd(13) + 'SEV'.padEnd(6) + 'CLASS'.padEnd(10) + 'STATUS' },
+          ...top.map((f) => ({
             k: (SEV[f.sev].rank < 2 ? 'warn' : 'out') as LineKind,
-            t: f.id.padEnd(14) + SEV[f.sev].short.padEnd(6) + f.cls.padEnd(7) + f.title,
+            t:
+              f.id.padEnd(13) +
+              SEV[f.sev].short.padEnd(6) +
+              f.cls.padEnd(10) +
+              STATUS_META[f.status].label +
+              (f.title ? '  — ' + f.title : '  — ' + CLASS_LABEL[f.cls]),
           })),
-          { k: 'dim', t: 'targets redacted per disclosure policy' },
+          { k: 'dim', t: 'full ledger in /findings — duplicates behind the toggle' },
           link,
         ]
+      }
       case 'research':
         return [
           { k: 'out', t: '[0x01] ICS/OT intrusion detection on HAI — NordSec 2026, under revision' },

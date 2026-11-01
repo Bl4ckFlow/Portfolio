@@ -59,7 +59,7 @@ export default function Navbar() {
             overflowX: 'auto',
           }}
         >
-          {SECTIONS.map((id, i) => (
+          {SECTIONS.map((id) => (
             <a
               key={id}
               href={'#' + id}
@@ -80,9 +80,6 @@ export default function Navbar() {
                 boxShadow: active === id ? 'inset 0 -1px 0 var(--color-accent)' : 'none',
               }}
             >
-              <span aria-hidden="true" style={{ fontSize: 10, color: 'var(--color-neutral-500)' }}>
-                {i + 1}
-              </span>
               /{id}
             </a>
           ))}
