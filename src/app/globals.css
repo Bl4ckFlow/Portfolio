@@ -1,26 +1,434 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ══════════════════════════════════════════════════════════════════════════
+   Nocturne — terminal variant. Tokens and component classes for the whole
+   page; the components style themselves from these custom properties.
+   ══════════════════════════════════════════════════════════════════════ */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: #0a0d10;
+  color-scheme: dark;
+  scroll-padding-top: 72px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  --color-bg: #0a0d10;
+  --color-surface: #0f1419;
+  --color-text: #d6dfdb;
+  --color-accent: #39ff88;
+  --color-accent-2: #e0a84e;
+  --color-divider: color-mix(in srgb, #d6dfdb 13%, transparent);
+
+  --color-neutral-100: #eef3f1;
+  --color-neutral-200: #d6dfdb;
+  --color-neutral-300: #b6c1bc;
+  --color-neutral-400: #96a29d;
+  --color-neutral-500: #7b8782;
+  --color-neutral-600: #58625e;
+  --color-neutral-700: #353d3b;
+  --color-neutral-800: #1f2624;
+  --color-neutral-900: #121816;
+
+  --color-accent-100: #e3ffee;
+  --color-accent-200: #b3ffd2;
+  --color-accent-300: #80ffb5;
+  --color-accent-400: #5cff9e;
+  --color-accent-500: #39ff88;
+  --color-accent-600: #2bc46a;
+  --color-accent-700: #1d8a4c;
+  --color-accent-800: #12522f;
+  --color-accent-900: #0b2a19;
+
+  --color-accent-2-100: #fdf1de;
+  --color-accent-2-200: #f6dcb0;
+  --color-accent-2-300: #efc581;
+  --color-accent-2-400: #e8b566;
+  --color-accent-2-500: #e0a84e;
+  --color-accent-2-600: #b5853a;
+  --color-accent-2-700: #7f5d29;
+  --color-accent-2-800: #4a3719;
+  --color-accent-2-900: #261c0e;
+
+  --font-heading: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-body: var(--font-plex-sans), system-ui, sans-serif;
+  --font-heading-weight: 500;
+
+  --space-1: 2.8px;
+  --space-2: 5.6px;
+  --space-3: 8.4px;
+  --space-4: 11.2px;
+  --space-6: 16.8px;
+  --space-8: 22.4px;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+
+  --shadow-sm: 0 0 0 1px #1f2624;
+  --shadow-md: 0 0 0 1px #353d3b, 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 0 0 1px #58625e, 0 18px 48px rgba(0, 0, 0, 0.7);
+
+  margin: 0;
+  background: #0a0d10;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* The cyan accent ramp, applied by <body data-accent="cyan">. */
+body[data-accent='cyan'] {
+  --color-accent: #00e5ff;
+  --color-accent-100: #dffaff;
+  --color-accent-200: #a8f1ff;
+  --color-accent-300: #70e9ff;
+  --color-accent-400: #38e4ff;
+  --color-accent-500: #00e5ff;
+  --color-accent-600: #00b3c7;
+  --color-accent-700: #00818f;
+  --color-accent-800: #01515a;
+  --color-accent-900: #022a2f;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  margin: 0 0 var(--space-2);
+}
+
+p {
+  margin: 0 0 var(--space-3);
+}
+
+body a {
+  color: var(--color-accent);
+  text-underline-offset: 3px;
+}
+body a:hover {
+  color: var(--color-accent-200);
+}
+
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 28%, transparent);
+  color: var(--color-neutral-100);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f2624;
+  border: 2px solid #0a0d10;
+  border-radius: 6px;
+}
+
+/* — rules: fade to transparent at both ends, a Nocturne signature — */
+.hr {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-divider) 48px,
+    var(--color-divider) calc(100% - 48px),
+    transparent
+  );
+}
+
+/* — buttons — */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: var(--space-2) calc(var(--space-3) * 1.2);
+  border-radius: var(--radius-md);
+}
+.btn svg {
+  display: block;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-primary {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+.btn-primary:active {
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+}
+.btn-secondary {
+  border-color: var(--color-divider);
+}
+.btn-secondary:hover {
+  background: color-mix(in srgb, var(--color-text) 7%, transparent);
+}
+.btn-secondary:active {
+  background: color-mix(in srgb, var(--color-text) 14%, transparent);
+}
+.btn-ghost {
+  color: var(--color-accent);
+  padding-inline: var(--space-1);
+}
+.btn-ghost:hover {
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+.btn-ghost:active {
+  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
+/* — segmented radio groups — */
+.seg {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+}
+.seg-opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.seg-opt input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.seg-opt + .seg-opt {
+  border-left: 1px solid var(--color-divider);
+}
+.seg-opt:has(input:checked) {
+  color: var(--color-accent);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}
+.seg-opt:not(:has(input:checked)):hover {
+  background: color-mix(in srgb, var(--color-text) 7%, transparent);
+}
+.seg-opt:has(input:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+/* — tags — */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 3px 10px;
+  border-radius: calc(var(--radius-md) * 0.75);
+}
+.tag-accent {
+  background: var(--color-accent-800);
+  color: var(--color-accent-100);
+}
+.tag-accent-2 {
+  background: var(--color-accent-2-800);
+  color: var(--color-accent-2-100);
+}
+.tag-neutral {
+  background: var(--color-neutral-800);
+  color: var(--color-neutral-100);
+}
+
+/* — navigation — */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.nav-brand {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  margin-right: auto;
+  text-decoration: none;
+}
+.nav a {
+  color: inherit;
+  text-decoration: none;
+}
+.nav a:hover,
+.nav a[aria-current='page'] {
+  color: var(--color-accent);
+}
+
+/* — the page's own interactive bits — */
+.hover-card {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.hover-card:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 35%, transparent) !important;
+  box-shadow: 0 0 44px -20px color-mix(in srgb, var(--color-accent) 55%, transparent);
+}
+.hover-finding:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 32%, transparent) !important;
+}
+.nav-link:hover {
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+}
+.term-row:focus-within {
+  background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+}
+.term-link:hover {
+  color: var(--color-accent-200);
+}
+.skip-link {
+  position: fixed;
+  left: 12px;
+  top: -80px;
+  z-index: 200;
+  padding: 8px 12px;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  font: 500 13px/1 var(--font-heading);
+  color: var(--color-accent);
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 12px;
+}
+.fab:hover {
+  background: color-mix(in srgb, var(--color-accent) 14%, var(--color-bg)) !important;
+}
+.dotted-leader::after {
+  content: '';
+  flex: 1;
+  min-width: 16px;
+  border-bottom: 1px dotted var(--color-neutral-700);
+  transform: translateY(-4px);
+}
+/* The accent L-brackets that mark a terminal frame's corners. */
+.bracketed {
+  position: relative;
+}
+.bracketed::before,
+.bracketed::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+.bracketed::before {
+  left: -1px;
+  top: -1px;
+  border-top: 1px solid var(--color-accent);
+  border-left: 1px solid var(--color-accent);
+  border-top-left-radius: var(--radius-lg);
+}
+.bracketed::after {
+  right: -1px;
+  bottom: -1px;
+  border-bottom: 1px solid var(--color-accent);
+  border-right: 1px solid var(--color-accent);
+  border-bottom-right-radius: var(--radius-lg);
+}
+.bracketed-sm::before,
+.bracketed-sm::after {
+  width: 14px;
+  height: 14px;
+}
+.no-bar {
+  scrollbar-width: none;
+}
+.no-bar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes raf-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  99% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes raf-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 60%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+}
+@keyframes raf-alarm {
+  0% {
+    opacity: 0;
+  }
+  10%,
+  40%,
+  70% {
+    opacity: 1;
+  }
+  25%,
+  55% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

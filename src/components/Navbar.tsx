@@ -1,82 +1,124 @@
 'use client'
 
-import { Menu, X } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { SECTIONS } from '../data/portfolio'
+import { useSite } from './site-context'
 
 export default function Navbar() {
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState('home')
-  const [isScrolled, setIsScrolled] = useState(false)
- 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-      setActiveSection(sectionId)
-      setIsMenuOpen(false)
-    }
-  }
+  const { active, goTo, openTerminal } = useSite()
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-lg py-4' : 'bg-transparent py-6'
-      }`}>
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            BlackFlow.dev
-          </div>
-          
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
-            {['home', 'about', 'projects', 'experience', 'contact'].map((item) => (
-              <button
-                key={item}
-                onClick={() => scrollToSection(item)}
-                className={`capitalize font-medium transition-colors ${
-                  activeSection === item 
-                    ? 'text-blue-600' 
-                    : isScrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-blue-200'
-                }`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
+    <header
+      style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 60,
+        background: 'color-mix(in srgb, var(--color-bg) 84%, transparent)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+      }}
+    >
+      <nav
+        className="nav"
+        aria-label="Sections"
+        style={{
+          maxWidth: 1240,
+          margin: '0 auto',
+          padding: '10px clamp(16px, 4vw, 40px)',
+          flexWrap: 'wrap',
+          gap: '6px 20px',
+          fontFamily: 'var(--font-heading)',
+          boxSizing: 'border-box',
+        }}
+      >
+        <a
+          href="#top"
+          onClick={(e) => {
+            e.preventDefault()
+            goTo('top', true)
+          }}
+          className="nav-brand"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'baseline',
+            fontSize: 15,
+            letterSpacing: '-0.01em',
+            color: 'var(--color-text)',
+          }}
+        >
+          <span style={{ color: 'var(--color-accent)' }}>~/</span>raf
+          <span style={{ color: 'var(--color-neutral-500)' }}>@om4ga_</span>
+        </a>
 
-          {/* Mobile Menu Button */}
+        <div
+          className="no-bar"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            maxWidth: '100%',
+            overflowX: 'auto',
+          }}
+        >
+          {SECTIONS.map((id, i) => (
+            <a
+              key={id}
+              href={'#' + id}
+              onClick={(e) => {
+                e.preventDefault()
+                goTo(id, true)
+              }}
+              aria-current={active === id ? 'page' : undefined}
+              className="nav-link"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'baseline',
+                gap: 6,
+                padding: '7px 9px',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: 13,
+                whiteSpace: 'nowrap',
+                boxShadow: active === id ? 'inset 0 -1px 0 var(--color-accent)' : 'none',
+              }}
+            >
+              <span aria-hidden="true" style={{ fontSize: 10, color: 'var(--color-neutral-500)' }}>
+                {i + 1}
+              </span>
+              /{id}
+            </a>
+          ))}
           <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2"
+            type="button"
+            onClick={openTerminal}
+            className="btn btn-primary"
+            style={{
+              marginLeft: 8,
+              padding: '5px 10px',
+              fontSize: 12,
+              whiteSpace: 'nowrap',
+              color: 'var(--color-accent)',
+            }}
           >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            ›_ terminal
+            <kbd
+              style={{
+                marginLeft: 6,
+                padding: '0 5px',
+                border: '1px solid var(--color-accent-800)',
+                borderRadius: 'var(--radius-sm)',
+                font: '500 11px/16px var(--font-heading)',
+                color: 'var(--color-accent-300)',
+              }}
+            >
+              /
+            </kbd>
           </button>
         </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg">
-            <div className="px-6 py-4 space-y-4">
-              {['home', 'about', 'projects', 'experience', 'contact'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => scrollToSection(item)}
-                  className="block w-full text-left capitalize font-medium text-gray-700 hover:text-blue-600 transition-colors"
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </nav>
+      <div
+        aria-hidden="true"
+        className="hr"
+        style={{ marginTop: 0 }}
+      />
+    </header>
   )
 }

@@ -1,31 +1,68 @@
 'use client'
 
-import { 
-  Github, Mail, Heart
-} from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { CVS } from '../data/portfolio'
+import { Kbd } from './ui'
+
+const p2 = (x: number) => String(x).padStart(2, '0')
 
 export default function Footer() {
-  return (
-    <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 md:mb-0">
-              BlackFlow.dev
-            </div>
-            <div className="flex gap-6">
-              <a href="https://github.com/Bl4ckFlow" className="hover:text-blue-400 transition-colors">
-                <Github className="w-6 h-6" />
-              </a>
+  const [compile, setCompile] = useState('—')
 
-              <a href="mailto:raouflarbi352@gmail.com" className="hover:text-blue-400 transition-colors">
-                <Mail className="w-6 h-6" />
-              </a>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 BlackFlow.dev Made with <Heart className="w-4 h-4 inline text-red-500" /> and lots of coffee.</p>
-          </div>
-        </div>
-      </footer>
+  useEffect(() => {
+    const lm = new Date(document.lastModified)
+    const d = isNaN(lm.getTime()) ? new Date() : lm
+    setCompile(
+      `${d.getUTCFullYear()}-${p2(d.getUTCMonth() + 1)}-${p2(d.getUTCDate())} ${p2(d.getUTCHours())}:${p2(
+        d.getUTCMinutes(),
+      )} UTC`,
+    )
+  }, [])
+
+  return (
+    <footer
+      style={{
+        maxWidth: 1240,
+        margin: 'clamp(88px, 11vw, 150px) auto 0',
+        // bottom padding clears the fixed terminal FAB in the corner
+        padding: '0 clamp(16px, 4vw, 40px) 92px',
+        boxSizing: 'border-box',
+      }}
+    >
+      <div aria-hidden="true" className="hr" />
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          gap: '10px 24px',
+          paddingTop: 20,
+          font: '400 12px/1.5 var(--font-heading)',
+          color: 'var(--color-neutral-500)',
+        }}
+      >
+        <p style={{ margin: 0 }}>
+          built by raf <span style={{ color: 'var(--color-neutral-600)' }}>{'//'}</span> no trackers{' '}
+          <span style={{ color: 'var(--color-neutral-600)' }}>{'//'}</span> last compile:{' '}
+          <span style={{ color: 'var(--color-neutral-300)' }}>{compile}</span>
+        </p>
+        <p style={{ margin: 0, display: 'flex', flexWrap: 'wrap', gap: '4px 14px' }}>
+          {CVS.map((cv) => (
+            <a key={cv.lang} href={cv.file} download={cv.download} style={{ textDecoration: 'none' }}>
+              cv --{cv.lang} ↓
+            </a>
+          ))}
+          <span>
+            <Kbd>1–7</Kbd> jump
+          </span>
+          <span>
+            <Kbd>/</Kbd> terminal
+          </span>
+          <span>
+            <Kbd>esc</Kbd> close
+          </span>
+        </p>
+      </div>
+    </footer>
   )
 }

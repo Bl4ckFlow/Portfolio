@@ -1,130 +1,157 @@
 'use client'
 
-import { Github, ExternalLink} from 'lucide-react'
+import { PROJECTS } from '../data/portfolio'
+import { LEAD_STYLE, SECTION_STYLE, SectionHeading } from './ui'
+
+const STATUS_COLOR = {
+  wip: 'var(--color-accent-2)',
+  active: 'var(--color-accent)',
+  shipped: 'var(--color-neutral-300)',
+} as const
 
 export default function Project() {
-
-  const projects = [
-    {
-      id: 1,
-      title: 'KernelScope',
-      description: 'A system-level monitoring tool focused on process and memory protection, built with C/C++ and low-level security practices.',
-      image: 'https://assets.cioinsight.com/uploads/2021/08/DRL-CME-6721-scaled.jpeg',
-      tags: ['C/C++', 'Security', 'System'],
-      liveUrl: '#',
-      githubUrl: '#',
-      featured: false
-    },
-    {
-      id: 2,
-      title: 'Password Manager',
-      description: 'A secure password manager using AES-128 encryption, built in C++ with a focus on local file-based protection.',
-      image: 'https://builtin.com/sites/www.builtin.com/files/styles/og/public/2022-06/lock-key-best-password-manager_7.png',
-      tags: ['C/C++', 'AES128', 'Cryptography'],
-      liveUrl: '#',
-      githubUrl: 'https://github.com/Bl4ckFlow/passManager',
-      featured: false
-    },
-    {
-      id: 3,
-      title: 'Ansii RSS Flux retrieval App',
-      description: 'A Python app that fetches and parses RSS feeds, built for monitoring online updates and triggering custom alerts.',
-      image: 'https://thumbs.dreamstime.com/b/flot-binaire-flux-d-information-20117342.jpg',
-      tags: ['Python', 'RSS', 'Automation'],
-      liveUrl: '#',
-      githubUrl: 'https://github.com/Bl4ckFlow/pythonProject',
-      featured: false
-    },
-    {
-      id: 4,
-      title: 'Stats DashBoard',
-      description: 'An internal dashboard built during my internship to visualize ticketing and support statistics, streamlining assistance for legal staff.',
-      image: 'https://images.bild.de/60befe97faf30300018c44e2/077f9aeeb2a020ccd92e0c4cdfc33e45,41072eaa?w=992',
-      tags: ['Express.js', 'Next.js', 'MariaDb', 'Data Viz'],
-      liveUrl: '#',
-      githubUrl: '#',
-      featured: false
-    },
-    {
-    id: 5,
-    title: 'PokeApp',
-    description: 'A terminal-based Pokédex built in C++ using FTXUI, displaying and filtering Pokémon data loaded from CSV files.',
-    image: 'https://bigitv.bigizone.co.il/wp-content/uploads/%D7%A4%D7%95%D7%A7%D7%99%D7%9E%D7%95%D7%9F-%D7%A1%D7%93%D7%A8%D7%94.jpg',
-    tags: ['C++', 'FTXUI', 'CSV', 'Terminal App'],
-    liveUrl: '#',
-    githubUrl: 'https://github.com/Bl4ckFlow/PokeApp',
-    featured: false
-    },
-    {
-    id: 6,
-    title: 'Telecom Data Analysis',
-    description: 'A statistical and machine learning analysis of telecom and internet data using clustering, regression, and forecasting models.',
-    image: 'https://th.bing.com/th/id/OIP.mgHH6ydL-2qHm4-5OCfSJgHaEL?r=0&rs=1&pid=ImgDetMain&cb=idpwebpc2',
-    tags: ['Python', 'Pandas', 'ML', 'Stats'],
-    liveUrl: '#',
-    githubUrl: 'https://github.com/Bl4ckFlow/Analyse_de_donn-e',
-    featured: false
-    },
-    {
-    id: 7,
-    title: 'Mini OS Emulator',
-    description: 'A simple command-line OS simulation built in C++ with navigation, I/O, and shell-like behavior.',
-    image: 'https://th.bing.com/th/id/OIP.s6Nc3hK98loPXP_D5GVxlwHaD4?r=0&rs=1&pid=ImgDetMain&cb=idpwebpc2',
-    tags: ['C++', 'System Programming', 'Simulation'],
-    liveUrl: '#',
-    githubUrl: 'https://github.com/Bl4ckFlow/OS',
-    featured: false
-    }
-  ]
-
-
   return (
-    <section id="projects" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-black">Featured Projects</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Here are some of my recent projects that showcase my skills and passion for creating amazing digital experiences.
+    <section id="projects" aria-labelledby="h-projects" style={SECTION_STYLE}>
+      <SectionHeading hex="0x04" id="h-projects" name="projects" cmd="$ ls ~/projects" />
+      <p style={LEAD_STYLE}>Things I build when nobody’s paying a bounty.</p>
+
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 330px), 1fr))',
+          gap: 16,
+          marginTop: 32,
+        }}
+      >
+        {PROJECTS.map((p) => (
+          <article
+            key={p.path}
+            className="hover-card"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+              padding: 20,
+              border: '1px solid var(--color-neutral-800)',
+              borderRadius: 'var(--radius-lg)',
+              background: 'color-mix(in srgb, var(--color-surface) 84%, transparent)',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 12,
+                font: '400 12px/1 var(--font-heading)',
+                color: 'var(--color-neutral-500)',
+              }}
+            >
+              <span>{p.path}</span>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  color: STATUS_COLOR[p.status],
+                }}
+              >
+                <i style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor' }} />
+                {p.status}
+              </span>
+            </div>
+
+            <h3
+              style={{
+                margin: 0,
+                font: '500 24px/1.15 var(--font-heading)',
+                letterSpacing: '-0.02em',
+                color: 'var(--color-text)',
+              }}
+            >
+              {p.title}
+            </h3>
+
+            <p
+              style={{
+                margin: 0,
+                font: '400 15px/1.6 var(--font-body)',
+                color: 'var(--color-neutral-300)',
+                textWrap: 'pretty',
+              }}
+            >
+              {p.blurb}
             </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            {projects.map((project) => (
-              <div key={project.id} className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden ${
-                project.featured ? 'md:col-span-2 lg:col-span-1' : ''
-              }`}>
-                <div className="relative overflow-hidden">
-                  <img 
-                    src={project.image} 
-                    alt={project.title}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
-                  <div className="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <a href={project.liveUrl} className="p-2 bg-white rounded-full hover:bg-blue-500 hover:text-white transition-colors">
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                    <a href={project.githubUrl} className="p-2 bg-white rounded-full hover:bg-gray-800 hover:text-white transition-colors">
-                      <Github className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors">{project.title}</h3>
-                  <p className="text-gray-600 mb-4">{project.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag, index) => (
-                      <span key={index} className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
+            <ul
+              style={{
+                margin: 0,
+                padding: 0,
+                listStyle: 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 7,
+                font: '400 13px/1.5 var(--font-heading)',
+                color: 'var(--color-neutral-300)',
+              }}
+            >
+              {p.bullets.map((b) => (
+                <li key={b} style={{ display: 'flex', gap: 8 }}>
+                  <span aria-hidden="true" style={{ color: 'var(--color-accent)' }}>
+                    ›
+                  </span>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 'auto' }}>
+              {p.tags.map((t) => (
+                <span
+                  key={t.t}
+                  className={t.accent ? 'tag tag-accent' : 'tag tag-neutral'}
+                  style={{ font: '400 11.5px/1.4 var(--font-heading)' }}
+                >
+                  {t.t}
+                </span>
+              ))}
+            </div>
+
+            {p.repo ? (
+              <a
+                href={p.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  paddingTop: 14,
+                  borderTop: '1px dashed var(--color-neutral-800)',
+                  font: '400 13px/1.3 var(--font-heading)',
+                  color: 'var(--color-accent)',
+                  textDecoration: 'none',
+                }}
+              >
+                {p.repo.replace('https://', '')}
+                <span aria-hidden="true">↗</span>
+              </a>
+            ) : (
+              <p
+                style={{
+                  margin: 0,
+                  paddingTop: 14,
+                  borderTop: '1px dashed var(--color-neutral-800)',
+                  font: '400 12.5px/1.3 var(--font-heading)',
+                  color: 'var(--color-neutral-500)',
+                }}
+              >
+                source private — walkthrough on request
+              </p>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
   )
 }
-
